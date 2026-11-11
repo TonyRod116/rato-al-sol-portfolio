@@ -1,0 +1,37 @@
+# Dependencias y resultados generados
+node_modules/
+.pnpm-store/
+dist/
+build/
+.next/
+.vite/
+.turbo/
+coverage/
+playwright-report/
+test-results/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.cache/
+
+# Secretos y estado local; conservar plantillas explícitas
+.env
+.env.*
+!.env.example
+frontend/maps-config.local.json
+*.pem
+*.key
+*.p12
+*.pfx
+.claude/settings.local.json
+.codex/auth.json
+
+# Temporales propios; no ignorar memoria ni archivos de instrucciones
+work/
+scratch/
+*.log
+.DS_Store
+Thumbs.db
+*.Zone.Identifier

@@ -1,0 +1,2 @@
+export const AERIAL_TILES = 'https://www.ign.es/wmts/pnoa-ma?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=OI.OrthoimageCoverage&STYLE=default&TILEMATRIXSET=GoogleMapsCompatible&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fjpeg';
+export const AERIAL_ATTRIBUTION = 'Foto aérea © <a href="https://pnoa.ign.es/">PNOA/IGN</a> · Melilla © Airbus DS (2022) · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';

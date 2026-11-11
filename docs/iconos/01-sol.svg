@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 128 128">
+  <title>Propuesta 1: Rayo de sol</title>
+  <rect width="128" height="128" fill="#faf7ee"/>
+  <g fill="none" stroke="#bd6345" stroke-linecap="round" stroke-width="6">
+    <path d="M64 19v12M64 97v12M19 64h12M97 64h12"/>
+    <path d="m32 32 8.5 8.5M87.5 87.5 96 96M96 32l-8.5 8.5M40.5 87.5 32 96"/>
+  </g>
+  <circle cx="64" cy="64" r="24" fill="#f8c648"/>
+</svg>

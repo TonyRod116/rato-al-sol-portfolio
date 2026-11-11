@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 128 128">
+  <title>Propuesta 2: Sol y sombra</title>
+  <rect width="128" height="128" fill="#faf7ee"/>
+  <circle cx="64" cy="64" r="32" fill="#f8c648"/>
+  <path d="M64 32a32 32 0 0 1 0 64Z" fill="#77939c"/>
+  <g fill="none" stroke="#273229" stroke-linecap="round" stroke-width="5">
+    <path d="M64 18v6M64 104v6M18 64h6M104 64h6"/>
+    <path d="m31.5 31.5 4.5 4.5M92 92l4.5 4.5M96.5 31.5 92 36M36 92l-4.5 4.5"/>
+  </g>
+</svg>

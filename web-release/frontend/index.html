@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf6ec">
+  <meta name="description" content="Explora las horas estimadas de sol y sombra para un lugar o un punto del mapa." data-en-content="Explore estimated sunlight and shade for a place or a point on the map.">
+  <title>Rato al Sol — Explora la luz en Madrid y Barcelona</title>
+  <link rel="icon" href="./favicon.svg?v=20261103-12" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=20261103-18">
+  <script type="module" src="./app.mjs?v=20261106-proto1"></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido" data-en="Skip to content">Saltar al contenido</a>
+  <header class="site-header">
+    <a class="wordmark" href="./" aria-label="Rato al Sol, inicio" data-en-aria-label="Rato al Sol, home"><span class="brand-sun" aria-hidden="true">✳</span> Rato al Sol<span class="wordmark-dot">.</span></a>
+    <div class="header-actions"><a class="header-link" href="#como-funciona"><span data-en="How it works">Cómo funciona</span> <span aria-hidden="true">↗</span></a><select id="language" class="language-select" aria-label="Idioma / Language"><option value="es">ES</option><option value="en">EN</option></select></div>
+  </header>
+  <main id="contenido">
+    <section class="intro" aria-labelledby="titulo">
+      <div><p class="section-kicker"><span data-en="SUN AND SHADE EXPLORER">EXPLORADOR DE SOL Y SOMBRA</span> <span aria-hidden="true">✳</span></p><h1 id="titulo"><span data-en="Find your">Encuentra tu</span> <em data-en="spot in the sun.">rato de sol.</em></h1><p class="lead" data-en="Move through time and discover how the light changes in Madrid and Barcelona.">Mueve la hora y descubre cómo cambia la luz en Madrid y Barcelona.</p></div>
+    </section>
+    <noscript><p class="noscript" data-en="Enable JavaScript to use the map and time slider.">Activa JavaScript para utilizar el mapa y el selector de hora.</p></noscript>
+    <p id="old-link-note" class="old-link-note" hidden data-en="This link was for a sample neighbourhood; you are now viewing the map.">Este enlace era de un barrio de ejemplo; ahora estás viendo el mapa.</p>
+    <section class="explore real-explore" id="madrid" aria-labelledby="madrid-title">
+      <div class="explore-grid">
+        <div class="search-panel">
+          <div class="real-inspector-head"><div><p class="section-kicker" data-en="YOUR NEXT MOMENT IN THE SUN">TU PRÓXIMO RATO AL SOL</p><h2 id="madrid-title"><span data-en="Find your place">Busca tu sitio</span><span class="heading-dot">.</span></h2><p data-en="Explore from the centre of the map">Explora desde el centro del mapa</p></div><span class="neighborhood-icon" aria-hidden="true">✳</span></div>
+          <div class="real-explanation"><span aria-hidden="true">✳</span><p data-en="Search for a place or tap anywhere on the map to discover when it will have sun or shade.">Busca un lugar o toca cualquier punto del mapa para descubrir cuándo tendrá sol o sombra.</p></div>
+          <section class="explorer-section" aria-labelledby="search-title">
+            <h3 id="search-title" data-en="A specific place">Un lugar concreto</h3>
+            <button id="use-location" class="use-location" type="button" disabled aria-describedby="location-help"><span aria-hidden="true">⌖</span> <span data-en="Use my location">Usar mi ubicación</span></button>
+            <p id="location-help" class="location-help" data-en="Your browser will ask for permission.">Tu navegador te pedirá permiso.</p>
+            <p id="location-status" class="explorer-status" role="status" aria-live="polite" hidden></p>
+            <label for="city-select" data-en="Go to a city">Ir a una ciudad</label>
+            <select id="city-select" class="city-select" disabled><option value="" data-en="Choose a city">Elige una ciudad</option><option value="madrid">Madrid</option><option value="barcelona">Barcelona</option></select>
+            <form id="place-form" class="place-form">
+              <label for="place-query" data-en="Name or type of place">Nombre o tipo de lugar</label>
+              <div class="search-line"><input id="place-query" type="search" placeholder="Restaurante, parque, Soho…" data-en-placeholder="Restaurant, park, Soho…" minlength="2" maxlength="80" required><button type="submit" data-en="Search ↗">Buscar ↗</button></div>
+            </form>
+            <p id="place-status" class="explorer-status" role="status" aria-live="polite" data-en="We search within 5 km of the centre of the map.">Buscamos cerca del centro del mapa, hasta 5 km.</p>
+            <ul id="place-results" class="explorer-list" aria-label="Lugares encontrados" data-en-aria-label="Places found"></ul>
+          </section>
+        </div>
+        <div class="scene-column">
+          <figure class="map-figure" tabindex="-1" aria-label="Mapa del lugar seleccionado" data-en-aria-label="Map of the selected place">
+            <div class="real-map-shell">
+              <div id="city-map" class="google-map" aria-label="Mapa tridimensional interactivo" data-en-aria-label="Interactive 3D map"></div>
+              <div id="open-map" class="google-map" aria-label="Mapa interactivo" data-en-aria-label="Interactive map" hidden></div>
+              <div id="map-message" class="map-message" role="status"><span aria-hidden="true">✳</span><p id="map-message-text" data-en="Preparing the map…">Preparando el mapa…</p><button id="map-retry" type="button" hidden data-en="Retry map ↗">Reintentar mapa ↗</button></div>
+            </div>
+            <figcaption>
+              <p><span aria-hidden="true">✳</span> <span data-en="Tap the map to choose a point.">Toca el mapa para elegir un punto.</span></p>
+              <div id="city-controls" class="city-controls" role="group" aria-label="Controles del mapa" data-en-aria-label="Map controls" hidden>
+                <button id="map-rotate" type="button" aria-label="Girar el mapa 45 grados" data-en-aria-label="Rotate the map 45 degrees" data-en="↻ Rotate">↻ Girar</button>
+                <button id="map-pitch" type="button" data-en="View in 2D">Ver en 2D</button>
+              </div>
+            </figcaption>
+          </figure>
+          <div id="outdoor-options" class="outdoor-options" hidden><p class="outdoor-title" data-en="Choose a nearby outdoor point">Elige un punto exterior cercano</p><p data-en="The reference point is inside a building. These are approximate points: choose where you want to be.">La referencia está dentro de un edificio. Son puntos aproximados: elige dónde quieres estar.</p><ul id="outdoor-list"></ul></div>
+          <section class="daylight-summary" aria-labelledby="daylight-title">
+              <div class="daylight-heading"><div><p class="section-kicker" data-en="AT A GLANCE">DE UN VISTAZO</p><h2 id="daylight-title" data-en="Sun and shade throughout the day">Sol y sombra durante el día</h2></div><span aria-hidden="true">☼</span></div>
+              <p id="daylight-place" class="daylight-place" role="status" data-en="Tap a point on the map to see its hours of light.">Toca un punto del mapa para ver sus horas de luz.</p>
+              <div class="daylight-track" aria-hidden="true"><div id="daylight-segments" class="daylight-segments"></div><span id="daylight-now" class="daylight-now" hidden></span></div>
+              <div class="daylight-scale" aria-hidden="true"><span>06 h</span><span>12 h</span><span>18 h</span><span>22 h</span></div>
+              <div class="daylight-legend" aria-label="Leyenda" data-en-aria-label="Legend"><span class="legend-sun" data-en="Sun">Sol</span><span class="legend-shade" data-en="Shade">Sombra</span><span class="legend-night" data-en="Night">Noche</span><span class="legend-unknown" data-en="No data">Sin datos</span></div>
+              <ul id="daylight-highlights" class="daylight-highlights" aria-label="Horas aproximadas de sol y sombra" data-en-aria-label="Approximate hours of sun and shade" hidden></ul>
+              <p class="daylight-note" data-en="Approximate local times, calculated every 30 minutes. Clouds, trees and awnings are not included.">Horas locales aproximadas, calculadas cada 30 minutos. Sin nubes, árboles ni toldos.</p>
+              <ul id="daylight-readable" class="visually-hidden" aria-label="Horas estimadas de luz y sombra" data-en-aria-label="Estimated hours of light and shade"></ul>
+          </section>
+          <section class="planner" aria-label="Elige el día y la hora" data-en-aria-label="Choose the day and time">
+            <div class="planner-heading"><div><p class="section-kicker" data-en="DISCOVER HOW THE LIGHT CHANGES">DESCUBRE CÓMO CAMBIA LA LUZ</p><h2><span data-en="Move through time">Mueve la hora</span> <span aria-hidden="true">↗</span></h2></div><output id="time-value" for="time">12:30</output></div>
+            <div class="planner-controls">
+              <div class="date-control"><label for="date" data-en="Day">Día</label><input type="date" id="date" name="fecha" min="2000-01-01" max="2099-12-31" required></div>
+              <div class="time-control"><label for="time" data-en="Local time">Hora local</label><input type="range" id="time" name="hora" min="360" max="1320" step="10" value="750"><div class="time-scale" aria-hidden="true"><span>06:00</span><span>12:00</span><span>18:00</span><span>22:00</span></div></div>
+            </div>
+            <div class="direction-line" role="status" aria-live="polite"><span id="direction-symbol" aria-hidden="true">↗</span><p id="direction-text" data-en="Calculating the direction of the shade…">Calculando la dirección de la sombra…</p></div>
+            <div class="planner-footer"><p class="date-note" data-en="Local time in mainland Spain. Approximate shadows; clouds, trees and awnings are not included.">Hora local peninsular. Sombras orientativas, sin nubes, árboles ni toldos.</p><button id="play-day" class="play-day" type="button" aria-pressed="false" data-en="▶ Play the day">▶ Ver pasar el día</button></div>
+            <div class="shadow-status"><p id="shadow-status" role="status" data-en="Loading building heights…">Cargando alturas de edificios…</p><button id="shadows-retry" type="button" hidden data-en="Try again ↻">Reintentar ↻</button></div>
+          </section>
+          <div class="map-tools">
+            <button id="select-map-center" class="select-map-center" type="button" disabled data-en="⌖ Mark the centre of the map">⌖ Marcar el centro del mapa</button>
+            <p id="map-provider-status" class="map-provider-status" role="status" hidden></p>
+          </div>
+        </div>
+        <aside class="real-inspector" aria-label="Buscar lugares y consultar su luz" data-en-aria-label="Search places and check their light">
+          <section id="point-info" class="point-info" aria-labelledby="point-title">
+            <p class="section-kicker" data-en="YOUR CHOSEN POINT">EL PUNTO QUE HAS ELEGIDO</p>
+            <h3 id="point-title" data-en="Your place throughout the day">Tu sitio, a lo largo del día</h3>
+            <p id="point-status" class="point-status" role="status" aria-live="polite" data-en="Choose a place or tap the map to see its hours.">Elige un lugar o toca el mapa para ver sus horas.</p>
+            <ul id="point-windows" class="light-windows" aria-label="Horas de sol y sombra estimadas" data-en-aria-label="Estimated hours of sun and shade"></ul>
+            <p id="point-note" class="explorer-note" hidden></p>
+          </section>
+          <section class="explorer-section nearby-section" aria-labelledby="nearby-title">
+            <p class="section-kicker" data-en="FIND YOUR MOMENT">ENCUENTRA TU MOMENTO</p>
+            <h3 id="nearby-title" data-en="Sunny places nearby">Sitios con sol cerca</h3>
+            <p class="explorer-intro" data-en="Choose a time or add an end time to search over a range.">Elige una hora o añade una hora final para buscar durante una franja.</p>
+            <form id="nearby-form" class="nearby-form">
+              <div class="range-heading"><label for="nearby-start" data-en="Start time">Hora de inicio</label><output id="nearby-start-value" for="nearby-start">12:30</output></div>
+              <input id="nearby-start" type="range" min="360" max="1380" step="10" value="750">
+              <div class="range-ends" aria-hidden="true"><span>06:00</span><span>23:00</span></div>
+              <label class="range-toggle"><input id="nearby-end-enabled" type="checkbox"> <span data-en="Search over a time range">Buscar durante una franja</span></label>
+              <div id="nearby-end-control" hidden><div class="range-heading"><label for="nearby-end" data-en="Until">Hasta</label><output id="nearby-end-value" for="nearby-end">14:30</output></div><input id="nearby-end" type="range" min="10" max="1440" step="10" value="870"><div class="range-ends" aria-hidden="true"><span data-en="After the start time">Después del inicio</span><span>24:00</span></div></div>
+              <div class="range-heading range-distance"><label for="nearby-radius" data-en="Maximum distance">Distancia máxima</label><output id="nearby-radius-value" for="nearby-radius">500 m</output></div>
+              <input id="nearby-radius" type="range" min="500" max="5000" step="500" value="500">
+              <div class="range-ends" aria-hidden="true"><span>500 m</span><span>5 km</span></div>
+              <button class="nearby-submit" type="submit" data-en="Find sunny places ↗">Buscar sitios con sol ↗</button>
+            </form>
+            <p id="nearby-status" class="explorer-status" role="status" aria-live="polite" data-en="Search parks and outdoor seating for the selected date.">Busca parques y terrazas para la fecha seleccionada.</p>
+            <ul id="nearby-results" class="explorer-list" aria-label="Lugares cercanos" data-en-aria-label="Nearby places"></ul>
+            <p class="explorer-note" data-en="Up to 4 points in outdoor spaces are analysed. One point does not represent a whole park; trees, clouds, awnings and parasols are not included.">Se analizan hasta 4 puntos de espacios exteriores. Un punto no representa todo un parque; no se incluyen árboles, nubes, toldos ni sombrillas.</p>
+            <p class="explorer-note"><span data-en="Places:">Lugares:</span> <a href="https://www.openstreetmap.org/copyright" data-en="OpenStreetMap and contributors">OpenStreetMap y colaboradores</a> <span data-en="and Madrid and Barcelona City Councils. Search results may be incomplete.">y ayuntamientos de Madrid y Barcelona. La búsqueda puede ser incompleta.</span> <a href="https://opendata-ajuntament.barcelona.cat/data/en/dataset/terrasses-comercos-vigents" data-en="Barcelona terrace permits">Autorizaciones de terrazas de Barcelona</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+          </section>
+        </aside>
+      </div>
+    </section>
+    <section class="about" id="como-funciona" aria-labelledby="about-title">
+      <div><p class="section-kicker" data-en="HOW IT WORKS">CÓMO FUNCIONA</p><h2 id="about-title"><span data-en="Chase the sun.">Para perseguir el sol.</span><br><em data-en="Or find some shade.">O escapar de él.</em></h2></div>
+      <div><p data-en="We calculate the sun’s position for the selected date and time and draw approximate shadows from available building data.">Calculamos la posición del sol para la fecha y la hora elegidas y dibujamos sombras aproximadas a partir de los edificios disponibles en la zona.</p><p data-en="The map is a guide, not a prediction for a particular table. Building heights may be incomplete; clouds, trees, awnings and parasols are not included.">El mapa es una orientación, no una predicción de sol en una mesa. Las alturas pueden tener omisiones y no tenemos en cuenta nubes, árboles, toldos ni sombrillas.</p><p class="explorer-note"><span data-en="Data from">Datos de</span> <a href="https://www.openstreetmap.org/copyright" data-en="OpenStreetMap and contributors">OpenStreetMap y sus colaboradores</a> <span data-en="and Madrid City Council:">y del Ayuntamiento de Madrid:</span> <a href="https://datos.madrid.es/dataset/200085-0-censo-locales/information" data-en="terrace register">censo de terrazas</a> <span data-en="and">y</span> <a href="https://datos.madrid.es/dataset/300750-0-servicio-mapas" data-en="estimated building heights">alturas estimadas</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></div>
+    </section>
+  </main>
+  <footer><span class="footer-brand">Rato al Sol<span class="wordmark-dot">.</span></span><span><span data-en="Made for good moments">Hecho para los buenos ratos</span> <span aria-hidden="true">☀</span></span><nav aria-label="Información legal" data-en-aria-label="Legal information"><a href="https://tonyrod116.github.io/rato-al-sol/privacidad.html" style="color: inherit" data-en="Privacy policy">Privacidad</a> <span aria-hidden="true">·</span> <a href="https://tonyrod116.github.io/rato-al-sol/condiciones.html" style="color: inherit" data-en="Terms of use">Condiciones de uso</a></nav></footer>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "rato-shadow-raster",
+  "version": "1.0.0",
+  "description": "Local native shadow mask renderer for Rato al Sol",
+  "private": true
+}

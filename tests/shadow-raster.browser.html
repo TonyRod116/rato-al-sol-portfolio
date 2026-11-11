@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Prueba de máscara raster de sombras</title>
+<p id="result">Probando…</p>
+<script type="module">
+  import { createShadowRasterPath } from '../mobile/src/shadow-raster-path.mjs';
+  const rectangle = (west, south, east, north) => [[west, south], [east, south], [east, north], [west, north], [west, south]];
+  const shape = (rings) => ({ geometry: { type: 'Polygon', coordinates: rings } });
+  const collection = { features: [
+    shape([rectangle(.1, .1, .65, .9), rectangle(.2, .45, .3, .55)]),
+    shape([rectangle(.35, .1, .9, .9)]),
+    shape([rectangle(.24, .48, .28, .52)]),
+  ], roofs: [
+    shape([rectangle(.12, .62, .32, .88), rectangle(.16, .68, .22, .80)]),
+    shape([rectangle(.19, .73, .28, .84)]),
+  ] };
+  const bounds = [0, 0, 1, 1];
+  const mercatorY = (lat) => (1 - Math.asinh(Math.tan(lat * Math.PI / 180)) / Math.PI) / 2;
+  function assert(condition, message) { if (!condition) throw new Error(message); }
+  try {
+    const builder = createShadowRasterPath(collection, bounds, { longestSide: 512 });
+    while (!builder.step(1)) { /* exercise incremental construction */ }
+    const path = builder.result(), canvas = document.createElement('canvas');
+    canvas.width = path.width; canvas.height = path.height;
+    const ctx = canvas.getContext('2d');
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${path.width}" height="${path.height}" viewBox="0 0 ${path.width} ${path.height}"><defs><mask id="roof-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="${path.width}" height="${path.height}" style="mask-type:luminance"><rect x="0" y="0" width="${path.width}" height="${path.height}" fill="white"/><path d="${path.roofD}" fill="black" fill-rule="nonzero"/></mask></defs><path d="${path.d}" fill="#304349" fill-opacity=".26" fill-rule="nonzero" mask="url(#roof-cutout)"/></svg>`;
+    const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+    const image = new Image();
+    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = url; });
+    ctx.drawImage(image, 0, 0);
+    URL.revokeObjectURL(url);
+    function pixel(lng, lat) {
+      const x = Math.floor(lng * canvas.width);
+      const y = Math.floor((mercatorY(lat) - mercatorY(1)) / (mercatorY(0) - mercatorY(1)) * canvas.height);
+      return [...ctx.getImageData(x, y, 1, 1).data];
+    }
+    const single = pixel(.15, .3), overlap = pixel(.5, .3), other = pixel(.8, .3), coveredHole = pixel(.26, .5);
+    assert(single[3] > 0 && single[3] < 255, 'Las sombras deben ser translúcidas.');
+    assert([overlap, other, coveredHole].every((value) => JSON.stringify(value) === JSON.stringify(single)),
+      'Las zonas solapadas deben tener la misma opacidad que una sombra simple, también dentro de un patio cubierto.');
+    assert(pixel(.21, .5)[3] === 0 && pixel(.95, .5)[3] === 0, 'El patio no cubierto y el exterior deben ser transparentes.');
+    assert(pixel(.14, .7)[3] === 0, 'La cubierta debe quedar sin sombra.');
+    assert(pixel(.25, .78)[3] === 0 && pixel(.2, .75)[3] === 0, 'Los tejados solapados deben quedar sin sombra, incluido otro tejado sobre el patio.');
+    assert(JSON.stringify(pixel(.17, .7)) === JSON.stringify(single), 'El patio abierto debe conservar la sombra del suelo.');
+    assert(JSON.stringify(pixel(.34, .7)) === JSON.stringify(single), 'La calle junto al edificio debe conservar la sombra.');
+    document.querySelector('#result').textContent = `PASS: opacidad ${single[3]}, solapes uniformes, tejados y patios respetados`;
+  } catch (error) {
+    document.querySelector('#result').textContent = `FAIL: ${error.message}`;
+    throw error;
+  }
+</script>

@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "Rato al Sol",
+    "slug": "rato-al-sol",
+    "version": "1.0.0",
+    "icon": "./assets/icon.png",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "locales": {
+      "es": {
+        "ios": {
+          "NSLocationWhenInUseUsageDescription": "Rato al Sol usa tu ubicación, con tu permiso, para centrar el mapa al abrir la app y buscar lugares cercanos.",
+          "NSMotionUsageDescription": "Rato al Sol no utiliza datos de movimiento; una biblioteca de ubicación incluye esta capacidad."
+        }
+      },
+      "en": {
+        "ios": {
+          "NSLocationWhenInUseUsageDescription": "With your permission, Rato al Sol uses your location to center the map when the app opens and find nearby places.",
+          "NSMotionUsageDescription": "Rato al Sol does not use motion data; a location library includes this capability."
+        }
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ratoalsol.app",
+      "buildNumber": "25"
+    },
+    "android": {
+      "package": "com.ratoalsol.app",
+      "versionCode": 23,
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#faf7ee"
+      }
+    },
+    "plugins": [
+      "./plugins/fix-map-overlay",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Rato al Sol usa tu ubicación, con tu permiso, para centrar el mapa al abrir la app y buscar lugares cercanos.",
+          "locationAlwaysAndWhenInUsePermission": false,
+          "locationAlwaysPermission": false,
+          "motionUsagePermission": "Rato al Sol no utiliza datos de movimiento; una biblioteca de ubicación incluye esta capacidad."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/adaptive-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#faf7ee"
+        }
+      ]
+    ],
+    "owner": "tonyrods-team",
+    "extra": {
+      "eas": {
+        "projectId": "218a788d-6681-4f43-b261-ea14818dce5d"
+      }
+    }
+  }
+}

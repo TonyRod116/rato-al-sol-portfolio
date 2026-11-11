@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 128 128">
+  <title>Propuesta 5: Sol en la ciudad</title>
+  <rect width="128" height="128" fill="#cfdfda"/>
+  <circle cx="65" cy="55" r="27" fill="#f8c648"/>
+  <path d="M26 97V70h15V58h14v20h11V67h15v10h21v20Z" fill="#273229"/>
+  <path d="M25 102h78" fill="none" stroke="#273229" stroke-linecap="round" stroke-width="5"/>
+</svg>

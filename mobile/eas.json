@@ -1,0 +1,24 @@
+{
+  "cli": {
+    "appVersionSource": "local",
+    "requireCommit": true
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "env": {
+          "RATO_REQUIRE_ANDROID_MAPS_KEY": "1"
+        }
+      }
+    },
+    "production": {
+      "android": {
+        "env": {
+          "RATO_REQUIRE_ANDROID_MAPS_KEY": "1"
+        }
+      }
+    }
+  }
+}

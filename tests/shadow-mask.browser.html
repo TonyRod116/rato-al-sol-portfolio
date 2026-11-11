@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Prueba de composición de sombras</title>
+<p id="result">Probando…</p>
+<script type="module">
+  import { drawShadowMask } from '../frontend/shadow-mask.mjs';
+  const rectangle = (west, south, east, north) => [[west, south], [east, south], [east, north], [west, north], [west, south]];
+  const collection = { type: 'FeatureCollection', features: [
+    { geometry: { type: 'Polygon', coordinates: [rectangle(.1, .1, .65, .9), rectangle(.2, .45, .3, .55)] } },
+    { geometry: { type: 'Polygon', coordinates: [rectangle(.35, .1, .9, .9)] } },
+  ] };
+  const canvas = document.createElement('canvas');
+  const bounds = [0, 0, 1, 1];
+  const mercatorY = (lat) => (1 - Math.asinh(Math.tan(lat * Math.PI / 180)) / Math.PI) / 2;
+  function pixel(lng, lat) {
+    const x = Math.floor(lng * canvas.width);
+    const y = Math.floor((mercatorY(lat) - mercatorY(1)) / (mercatorY(0) - mercatorY(1)) * canvas.height);
+    return [...canvas.getContext('2d').getImageData(x, y, 1, 1).data];
+  }
+  function assert(condition, message) { if (!condition) throw new Error(message); }
+  try {
+    drawShadowMask(canvas, collection, bounds, 512);
+    const single = pixel(.15, .3), overlap = pixel(.5, .3), other = pixel(.8, .3);
+    assert(JSON.stringify(single) === JSON.stringify(overlap) && JSON.stringify(single) === JSON.stringify(other),
+      'Las sombras individuales y superpuestas deben tener el mismo color y opacidad.');
+    assert(single[3] === 255 && pixel(.25, .5)[3] === 0 && pixel(.95, .5)[3] === 0,
+      'Se deben respetar el exterior y los huecos interiores.');
+    drawShadowMask(canvas, { features: [] }, bounds, 512);
+    assert(pixel(.5, .3)[3] === 0, 'Una noche sin sombras debe limpiar la máscara anterior.');
+    document.querySelector('#result').textContent = 'PASS';
+  } catch (error) {
+    document.querySelector('#result').textContent = `FAIL: ${error.message}`;
+    throw error;
+  }
+</script>
