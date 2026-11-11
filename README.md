@@ -15,14 +15,16 @@
   <a href="https://apps.apple.com/es/app/rato-al-sol/id6830366652"><strong>Descargar para iPhone</strong></a>
 </p>
 
-[![Mapa de la Puerta del Sol con sombras sobre la plaza y el buscador de lugares a la derecha](docs/screenshots/web-puerta-del-sol.jpg)](https://tony-r.com/rato-al-sol/)
+[![Mapa de la Puerta del Sol con sombras sobre la plaza y el botón de ubicación a la derecha](docs/screenshots/web-puerta-del-sol.jpg)](https://tony-r.com/rato-al-sol/)
 
 <p align="center"><sub>Puerta del Sol, Madrid · 13:40 · Captura de la demo web</sub></p>
+
+En la web, pulsa **Usar mi ubicación** para empezar cerca de ti. Si el navegador tiene permiso, el mapa se centra allí al abrirse. Si no puede localizarte, vuelve a la última zona que consultaste.
 
 ## Elige dónde sentarte
 
 1. **Toca un punto del mapa.** Compara dos aceras y consulta sus franjas de sol y sombra.
-2. **Mueve la hora o pulsa ▶.** Mira cómo se desplazan las sombras durante el día.
+2. **Mueve la hora o pulsa ▶.** En la web, la reproducción empieza en la hora elegida y vuelve a las 06:00 tras las 22:00.
 3. **Busca cerca.** Prueba con las **16:00** y **500 m** para explorar parques y terrazas de la zona.
 
 <p align="center">
@@ -47,7 +49,7 @@ La captura de Android corresponde a la prueba interna.
 | Leer los edificios por zona en el móvil y repartir el cálculo de las franjas en tandas para que el mapa siga respondiendo. | [Cobertura local](mobile/src/shadow-coverage.mjs) · [Cálculo en tandas](mobile/src/light-at-task.mjs) |
 | Comprobar que la capa local recupera las fachadas de Calàbria y dibuja sombras en distintos puntos de Madrid. | [Pruebas con datos reales](tests/shadow-coverage.test.mjs) |
 
-La próxima versión móvil lee los edificios de ambas ciudades desde el dispositivo y reproduce el día en bucle desde la hora elegida. En Madrid combina alturas municipales y Catastro. En Barcelona estima alturas a partir del número de plantas de Catastro. [Fuentes y proceso de generación](docs/DATA_SOURCES.md#geometría-de-sombras-incluida-en-ios-y-android--2026-11-11)
+La web carga los edificios de la zona visible y reutiliza los que ya ha descargado al mover el mapa. La próxima versión móvil lee la misma cobertura desde el dispositivo. En Madrid combina alturas municipales y Catastro. En Barcelona estima alturas a partir del número de plantas de Catastro. [Fuentes y proceso de generación](docs/DATA_SOURCES.md#geometría-de-sombras-incluida-en-ios-y-android--2026-11-11)
 
 ## Ejecuta el proyecto en local
 
